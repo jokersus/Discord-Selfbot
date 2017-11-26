@@ -116,6 +116,8 @@ def wizard():
 
 if _reset_cfg and not heroku:
     wizard()
+elif (heroku):
+      pass
 else:
     try:
         with open('settings/config.json', encoding='utf-8', mode="r") as f:
