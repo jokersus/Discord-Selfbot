@@ -24,7 +24,7 @@ class Git:
 
     async def githubusername(self):
         '''Returns Github Username'''
-        async with self.session.get('https://api.github.com/user', headers={"Authorization": f"Bearer {self.githubtoken}"}) as resp: #get username 
+        async with self.session.get('https://api.github.com/user', headers={"Authorization": "Bearer {}".format(self.githubtoken)}) as resp: #get username 
             if 300 > resp.status >= 200:
                 return (await resp.json())['login']
             if resp.status == 401: #invalid token!
