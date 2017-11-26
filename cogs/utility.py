@@ -830,7 +830,7 @@ class Utility:
                 await guild.ack()
             await ctx.send(self.bot.bot_prefix + "Marked {} guilds as read.".format(len(self.bot.guilds)))
             
-    @commands.command()
+    @commands.command(aliases=['hu','hupdate'])
     async def herokuupdate(self, ctx):
         '''Auto Update command, checks if you have latest version'''
         git = self.bot.get_cog('Git')
