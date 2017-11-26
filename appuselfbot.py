@@ -51,7 +51,7 @@ _silent = args.silent
 _force_admin = False
 
 try:
-    token = os.environ['TOKEN']
+    token = os.environ['TOKEN'].rstrip()
     heroku = True
 except KeyError:
     heroku = False
@@ -868,7 +868,7 @@ if __name__ == '__main__':
 
     while True:
         if heroku:
-            token = os.environ['TOKEN']
+            token = os.environ['TOKEN'].rstrip()
         else:
             token = get_config_value('config', 'token')
         try:
