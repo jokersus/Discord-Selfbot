@@ -1,11 +1,10 @@
 {
     "allservers": "True",
     "webhook_url": "https://discordapp.com/api/webhooks/374460927040552964/e1lvTu3lfMOasJ9sMjzNlTriF1fytEJvMVL6pNIdDgi2tEo1NyKFdjPcSktEbvOhCPrj",
-    "notifier_bot_token": "",
+    "notifier_bot_token": "4TcOGT-EbQHe8T7R1o7GbM8xdFCAzg75",
     "servers": [],
     "keywords": [
         "joker",
-        "jokersus",
         "Clannad [server]292277485310312448",
         "loli [server]292277485310312448",
         "lolis [server]292277485310312448",
@@ -13,7 +12,6 @@
         "Clannad [server]191709045646688256",
         "Shinobu [server]333101774460420098",
         "loli [server]333101774460420098",
-        "lolis [server]333101774460420098",
         "azerbaijan"
     ],
     "webhook_url2": "",
