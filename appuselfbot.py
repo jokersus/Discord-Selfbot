@@ -289,9 +289,9 @@ async def on_ready():
         if 'embed_color' not in opt:
             opt['embed_color'] = ''
         if 'quoteembed_color' not in opt:
-            opt['quoteembed_color'] = 'bc0b0b'
+            opt['quoteembed_color'] = 'ee90ea'
         if 'customcmd_color' not in opt:
-            opt['customcmd_color'] = '27007A'
+            opt['customcmd_color'] = 'ee90ea'
         if 'rich_embed' not in opt:
             opt['rich_embed'] = 'on'
         if 'default_status' not in opt:
