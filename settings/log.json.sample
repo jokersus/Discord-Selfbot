@@ -1,19 +1,21 @@
 {
-    "keyword_logging": "on",
-	"user_logging": "on",
-	"log_location": "",
-	"user_location": "",
     "allservers": "True",
-	"servers": [],
-    "keywords": [],
-    "blacklisted_words": [],
-	"blacklisted_users": [],
-    "blacklisted_servers": [],
-	"blacklisted_channels": {},
+    "webhook_url": "https://discordapp.com/api/webhooks/374460927040552964/e1lvTu3lfMOasJ9sMjzNlTriF1fytEJvMVL6pNIdDgi2tEo1NyKFdjPcSktEbvOhCPrj",
+    "notifier_bot_token": "",
+    "servers": [],
+    "keywords": [
+
+    ],
+    "webhook_url2": "",
     "log_size": "25",
-    "context_len": "4",
+    "blacklisted_users": [],
+    "keyword_logging": "on",
+    "blacklisted_servers": [],
+    "user_location": "",
+    "blacklisted_channels": {},
+    "log_location": "373596655355822081 344556222755766283",
     "keyusers": {},
-	"webhook_url": "",
-	"webhook_url2": "",
-    "notifier_bot_token": ""
+    "context_len": "4",
+    "blacklisted_words": [],
+    "user_logging": "on"
 }
