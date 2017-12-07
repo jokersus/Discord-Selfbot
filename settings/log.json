@@ -5,12 +5,7 @@
     "blacklisted_users" : [],
     "blacklisted_words" : [],
     "context_len" : "4",
-    "keyusers" : {
-        "193927081015377922 all" : [
-            1512411583.777577,
-            900.0
-        ]
-    },
+    "keyusers" : {},
     "keyword_logging" : "on",
     "keywords" : [
         "epictroll",
