@@ -1,0 +1,15 @@
+{
+    "customcmd_color": "EE90EA",
+    "default_status": "dnd",
+    "rich_embed": "on",
+    "quoteembed_color": "auto",
+    "google_api_key": "",
+    "embed_color": "00FFFF",
+    "ascii_font": "big",
+    "online_stats": "on",
+    "24hours": "true",
+    "custom_search_engine": "",
+    "timezone": "+1",
+    "image_dump_delay": "0",
+    "password": ""
+}
