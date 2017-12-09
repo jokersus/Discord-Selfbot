@@ -1,0 +1,1 @@
+print(*('{0.display_name} ({0})'.format(member) for member in guild.members if 'lelouch' in member.display_name.lower() or 'lelouch' in member.name.lower()), sep='\n')
