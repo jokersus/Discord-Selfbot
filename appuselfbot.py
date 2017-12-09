@@ -213,6 +213,7 @@ async def on_ready():
     bot.game_time = bot.avatar_time = bot.gc_time = bot.refresh_time = time.time()
     bot.notify = load_notify_config()
     bot.command_count = {}
+    bot.channel_last = [None, None]
     if not os.path.isfile('settings/ignored.json'):
         with open('settings/ignored.json', 'w', encoding="utf8") as fp:
             json.dump({'servers': []}, fp, indent=4)
@@ -480,7 +481,6 @@ async def reload(ctx, txt: str = None):
                 l -= 1
         await ctx.send(bot.bot_prefix + 'Reloaded {} of {} modules.'.format(l, len(utils)))
 
-
 # On all messages sent (for quick commands, custom commands, and logging messages)
 @bot.event
 async def on_message(message):
@@ -490,6 +490,17 @@ async def on_message(message):
 
     # If the message was sent by me
     if message.author.id == bot.user.id:
+        if ">>" in message.content:
+            message.content, new_channel = message.content.rsplit(">>", 1)
+            if new_channel.strip().isdigit():
+                message.channel = bot.get_channel(int(new_channel.strip()))
+            elif new_channel.strip() == "" and bot.channel_last[0] != None:
+                message.channel = bot.get_channel(bot.channel_last[0])
+
+        if hasattr(bot, 'channel_last'):
+            if message.channel.id not in bot.channel_last:
+                bot.channel_last.pop(0)
+                bot.channel_last.append(message.channel.id)
         if hasattr(bot, 'icount'):
             bot.icount += 1
         try:
