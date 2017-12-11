@@ -7,8 +7,8 @@
     "default_status": "idle",
     "ascii_font": "big",
     "quoteembed_color": "EE90EA",
-    "embed_color": "",
-    "timezone": "",
+    "embed_color": "EE90EA",
+    "timezone": "+4",
     "24hours": "true",
 	"password": ""
 }
