@@ -1,6 +1,6 @@
 {
     "customcmd_color": "EE90EA",
-    "default_status": "dnd",
+    "default_status": "idle",
     "rich_embed": "on",
     "quoteembed_color": "auto",
     "google_api_key": "",
