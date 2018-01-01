@@ -491,11 +491,12 @@ async def on_message(message):
     # If the message was sent by me
     if message.author.id == bot.user.id:
         if ">>" in message.content:
-            message.content, new_channel = message.content.rsplit(">>", 1)
-            if new_channel.strip().isdigit():
-                message.channel = bot.get_channel(int(new_channel.strip()))
-            elif new_channel.strip() == "" and bot.channel_last[0] != None:
-                message.channel = bot.get_channel(bot.channel_last[0])
+            if message.content.rsplit(">>", 1)[0] != "":
+                message.content, new_channel = message.content.rsplit(">>", 1)
+                if new_channel.strip().isdigit():
+                    message.channel = bot.get_channel(int(new_channel.strip()))
+                elif new_channel.strip() == "" and bot.channel_last[0] != None:
+                    message.channel = bot.get_channel(bot.channel_last[0])
 
         if hasattr(bot, 'channel_last'):
             if message.channel.id not in bot.channel_last:
@@ -688,6 +689,8 @@ async def on_message(message):
         # Bad habit but this is for skipping errors when dealing with Direct messages, blocked users, etc. Better to just ignore.
         except (AttributeError, discord.errors.HTTPException):
             pass
+    elif isinstance(message.channel, discord.abc.PrivateChannel):
+        add_alllog(str(message.channel.id), "DM", message)
 
     await bot.process_commands(message)
 
