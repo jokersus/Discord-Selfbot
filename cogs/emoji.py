@@ -13,18 +13,24 @@ class Emoji:
         self.bot = bot
 
     def find_emoji(self, msg):
-        msg = re.sub("<:(.+):([0-9]+)>", "\\2", msg)
+        msg = re.sub("<a?:(.+):([0-9]+)>", "\\2", msg)
         color_modifiers = ["1f3fb", "1f3fc", "1f3fd", "1f44c", "1f3fe", "1f3ff"]  # These color modifiers aren't in Twemoji
+        
+        name = None
 
         for guild in self.bot.guilds:
             for emoji in guild.emojis:
-                if msg.strip().lower() in emoji.name:
+                if msg.strip().lower() in emoji.name.lower():
+                    name = emoji.name + (".gif" if emoji.animated else ".png")
                     url = emoji.url
-                    emote_name = emoji.name
+                    id = emoji.id
+                    guild_name = guild.name
                 if msg.strip() in (str(emoji.id), emoji.name):
-                    name = "{}.png".format(emoji.name)
+                    name = emoji.name + (".gif" if emoji.animated else ".png")
                     url = emoji.url
                     return name, url, emoji.id, guild.name
+        if name:
+            return name, url, id, guild_name
 
         # Here we check for a stock emoji before returning a failure
         codepoint_regex = re.compile('([\d#])?\\\\[xuU]0*([a-f\d]*)')
@@ -72,7 +78,7 @@ class Emoji:
         for emoji in emojis:
             name, url, id, guild = self.find_emoji(emoji)
             if url == "":
-                await ctx.send(self.bot.bot_prefix + "Could not find {} emoji. Skipping.".format(emoji))
+                await ctx.send(self.bot.bot_prefix + "Could not find {}. Skipping.".format(emoji))
                 continue
             response = requests.get(url, stream=True)
             if response.status_code == 404:
@@ -124,7 +130,7 @@ class Emoji:
 
         response = requests.get(match.url)
         emoji = await ctx.guild.create_custom_emoji(name=match.name, image=response.content)
-        await ctx.send(self.bot.bot_prefix + "Successfully added the emoji {0.name} <:{0.name}:{0.id}>!".format(emoji))
+        await ctx.send(self.bot.bot_prefix + "Successfully added the emoji {0.name} <{1}:{0.name}:{0.id}>!".format(emoji, "a" if emoji.animated else ""))
 
     @emoji.command(pass_context=True)
     @commands.has_permissions(manage_emojis=True)
@@ -139,8 +145,8 @@ class Emoji:
         try:
             emoji = await ctx.guild.create_custom_emoji(name=name, image=response.content)
         except InvalidArgument:
-            return await ctx.send(self.bot.bot_prefix + "Invalid image type. Only PNG and JPEG are supported.")
-        await ctx.send(self.bot.bot_prefix + "Successfully added the emoji {0.name} <:{0.name}:{0.id}>!".format(emoji))
+            return await ctx.send(self.bot.bot_prefix + "Invalid image type. Only PNG, JPEG and GIF are supported.")
+        await ctx.send(self.bot.bot_prefix + "Successfully added the emoji {0.name} <{1}:{0.name}:{0.id}>!".format(emoji, "a" if emoji.animated else ""))
 
     @emoji.command(pass_context=True)
     @commands.has_permissions(manage_emojis=True)
