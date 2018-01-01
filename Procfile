@@ -1,1 +1,1 @@
-worker: ./loopself.py
+worker: .loopself.py
