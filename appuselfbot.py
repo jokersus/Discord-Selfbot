@@ -491,7 +491,7 @@ async def on_message(message):
         bot.message_count += 1
 
     # If the message was sent by me
-    if message.author.id == bot.user.id:
+    if message.author.id == 275331662865367040:
         if hasattr(bot, 'icount'):
             bot.icount += 1
         try:
