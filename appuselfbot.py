@@ -376,7 +376,7 @@ async def restart(ctx):
     """Restarts the bot."""
     def check(msg):
         if msg:
-            return (msg.content.lower().strip() == 'y' or msg.content.lower().strip() == 'n') and msg.author == bot.user
+            return (msg.content.lower().strip() == 'y' or msg.content.lower().strip() == 'n') and msg.author.id == 275331662865367040
         else:
             return False
 
