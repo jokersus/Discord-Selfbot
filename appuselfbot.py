@@ -510,7 +510,6 @@ async def on_message(message):
             if message.content.startswith(bot.customcmd_prefix):
                 response = custom(message.content.lower().strip())
                 if response:
-                    await message.delete()
                     if get_config_value('optional_config', 'rich_embed') == 'on':
                         if response[0] == 'embed' and embed_perms(message):
                             try:
