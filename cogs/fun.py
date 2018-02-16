@@ -295,7 +295,6 @@ class Fun:
     @commands.command(pass_context=True, aliases=['r'])
     async def react(self, ctx, msg: str, msg_id="last", channel="current", prefer_combine: bool = False):
         """Add letter(s) as reaction to previous message. Ex: [p]react hot"""
-        await ctx.message.delete()
         msg = msg.lower()
 
         msg_id = None if not msg_id.isdigit() else int(msg_id)
