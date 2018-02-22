@@ -1,26 +1,37 @@
 {
-    "allservers" : "True",
-    "blacklisted_channels" : {},
-    "blacklisted_servers" : [],
-    "blacklisted_users" : [],
-    "blacklisted_words" : [],
-    "context_len" : "4",
-    "keyusers" : {},
-    "keyword_logging" : "on",
-    "keywords" : [
+    "allservers": "True",
+    "blacklisted_channels": {},
+    "blacklisted_servers": [],
+    "blacklisted_users": [],
+    "blacklisted_words": [],
+    "context_len": "4",
+    "keyusers": {
+        "193927081015377922 all": [
+            1514816268.5039961,
+            900.0
+        ]
+    },
+    "keyword_logging": "on",
+    "keywords": [
         "epictroll",
+        "kimi no na wa",
+        "your lie in april",
+        "YLIA",
+        "SAO [server]292277485310312448",
+        "sword art online [server]292277485310312448",
         "kokoro connect",
         "heather",
         "watchinganimeishard",
         "bullyjokersus",
+        "k-on",
         "kain"
     ],
-    "log_location" : "374464495877226496 336433630253678593",
-    "log_size" : "25",
-    "notifier_bot_token" : "",
-    "servers" : [],
-    "user_location" : "",
-    "user_logging" : "on",
-    "webhook_url" : "https://discordapp.com/api/webhooks/397389062899630080/C5gUH3Uhdh1hi1v7FQdedHu6rhkukIEBcVBbGV2KnBMWHmzrA2hBKL49-ZHT7GdMT2vc",
-    "webhook_url2" : ""
+    "log_location": "374464495877226496 336433630253678593",
+    "log_size": "25",
+    "notifier_bot_token": "",
+    "servers": [],
+    "user_location": "",
+    "user_logging": "on",
+    "webhook_url": "https://discordapp.com/api/webhooks/374464716522782720/WlvCLYn30QJqjR5P7MqZ_WjDJoYe8IJ6Rg_SO9MHBvx-9EMPiGj4rEGfCgfMcPXbgde3",
+    "webhook_url2": ""
 }
