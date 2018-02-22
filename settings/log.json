@@ -5,25 +5,14 @@
     "blacklisted_users": [],
     "blacklisted_words": [],
     "context_len": "4",
-    "keyusers": {
-        "193927081015377922 all": [
-            1514816268.5039961,
-            900.0
-        ]
-    },
+    "keyusers": {},
     "keyword_logging": "on",
     "keywords": [
         "epictroll",
-        "kimi no na wa",
-        "your lie in april",
-        "YLIA",
-        "SAO [server]292277485310312448",
-        "sword art online [server]292277485310312448",
         "kokoro connect",
         "heather",
         "watchinganimeishard",
         "bullyjokersus",
-        "k-on",
         "kain"
     ],
     "log_location": "374464495877226496 336433630253678593",
