@@ -200,7 +200,7 @@ bot.customcmd_prefix = get_config_value('config', 'customcmd_prefix')
 async def on_ready():
     message = 'Logged in as %s.' % bot.user
     uid_message = 'User id: %s.' % bot.user.id
-    separator = '━' * max(len(message), len(uid_message))
+    separator = '-' * max(len(message), len(uid_message))
     print(separator)
     try:
         print(message)
@@ -249,7 +249,7 @@ async def on_ready():
             try:
                 bot.status_type = games['status']
             except KeyError:
-                bot.status_type = 0
+                bot.status_type = discord.ActivityType.playing
             g.seek(0)
             g.truncate()
             json.dump(games, g, indent=4)
@@ -365,6 +365,8 @@ async def on_command_error(ctx, error):
         formatter = commands.formatter.HelpFormatter()
         help = await formatter.format_help_for(ctx, ctx.command)
         await ctx.send(bot.bot_prefix + "You are missing required arguments.\n" + help[0])
+    elif isinstance(error, commands.errors.BadArgument):
+        await ctx.send(bot.bot_prefix + "You have given an invalid argument.")
     else:
         if _silent:
             await ctx.send(bot.bot_prefix + "An error occurred with the `{}` command.".format(ctx.command.name))
@@ -762,11 +764,11 @@ async def game_and_avatar(bot):
                                 bot.game = games['games'][next_game]
                                 if bot.is_stream and '=' in games['games'][next_game]:
                                     g, url = games['games'][next_game].split('=')
-                                    await bot.change_presence(game=discord.Game(name=g, type=1,
+                                    await bot.change_presence(activity=discord.Streaming(name=g,
                                                                                 url=url),
                                                               status=set_status(bot), afk=True)
                                 else:
-                                    await bot.change_presence(game=discord.Game(name=games['games'][next_game], type=bot.status_type), status=set_status(bot), afk=True)
+                                    await bot.change_presence(activity=discord.Activity(name=games['games'][next_game], type=bot.status_type), status=set_status(bot), afk=True)
                             else:
                                 if next_game+1 == len(games['games']):
                                     next_game = 0
@@ -775,9 +777,9 @@ async def game_and_avatar(bot):
                                 bot.game = games['games'][next_game]
                                 if bot.is_stream and '=' in games['games'][next_game]:
                                     g, url = games['games'][next_game].split('=')
-                                    await bot.change_presence(game=discord.Game(name=g, type=1, url=url), status=set_status(bot), afk=True)
+                                    await bot.change_presence(activity=discord.Streaming(name=g, url=url), status=set_status(bot), afk=True)
                                 else:
-                                    await bot.change_presence(game=discord.Game(name=games['games'][next_game], type=bot.status_type), status=set_status(bot), afk=True)
+                                    await bot.change_presence(activity=discord.Activity(name=games['games'][next_game], type=bot.status_type), status=set_status(bot), afk=True)
 
                     else:
                         game_check = game_time_check(bot.game_time, 180)
@@ -789,9 +791,9 @@ async def game_and_avatar(bot):
                             bot.game = games['games']
                             if bot.is_stream and '=' in games['games']:
                                 g, url = games['games'].split('=')
-                                await bot.change_presence(game=discord.Game(name=g, type=1, url=url), status=set_status(bot), afk=True)
+                                await bot.change_presence(activity=discord.Streaming(name=g, url=url), status=set_status(bot), afk=True)
                             else:
-                                await bot.change_presence(game=discord.Game(name=games['games'], type=bot.status_type), status=set_status(bot), afk=True)
+                                await bot.change_presence(activity=discord.Activity(name=games['games'], type=bot.status_type), status=set_status(bot), afk=True)
 
             # Cycles avatar if avatar cycling is enabled.
             if hasattr(bot, 'avatar_time') and hasattr(bot, 'avatar'):
@@ -827,9 +829,9 @@ async def game_and_avatar(bot):
                     bot.refresh_time = refresh_time
                     if bot.game and bot.is_stream and '=' in bot.game:
                         g, url = bot.game.split('=')
-                        await bot.change_presence(game=discord.Game(name=g, type=1, url=url), status=set_status(bot), afk=True)
+                        await bot.change_presence(activity=discord.Streaming(name=g, url=url), status=set_status(bot), afk=True)
                     elif bot.game and not bot.is_stream:
-                        await bot.change_presence(game=discord.Game(name=bot.game, type=bot.status_type),
+                        await bot.change_presence(activity=discord.Game(name=bot.game),
                                                   status=set_status(bot), afk=True)
                     else:
                         await bot.change_presence(status=set_status(bot), afk=True)
