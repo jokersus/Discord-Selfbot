@@ -239,7 +239,7 @@ class Misc:
             pass
 
     @commands.command(pass_context=True)
-    async def editembed(self, ctx, msg_id : int):
+    async def editembed(self, ctx, msg_id: int):
         """Edit an embedded message."""
         msg = await ctx.history(limit=100).get(id=msg_id)
         if not msg:
@@ -259,6 +259,13 @@ class Misc:
                 result.append("color={}".format(str(old_embed.color)[1:]))
             if old_embed.url:
                 result.append("url={}".format(old_embed.url))
+            if old_embed.author:
+                author = "author=name=" + old_embed.author.name
+                if old_embed.author.icon_url:
+                    author += " icon=" + old_embed.author.icon_url
+                if old_embed.author.url:
+                    author += " url=" + old_embed.author.url
+                result.append(author)
             if fields:
                 for field in fields:
                     result.append("field=name={} value={} inline={}".format(field.name, field.value, field.inline))
@@ -340,11 +347,14 @@ class Misc:
                 if 'icon=' in author:
                     text, icon = author.split('icon=')
                     if 'url=' in icon:
-                        print("here")
+                        em.set_author(name=text.strip()[5:], icon_url=icon.split('url=')[0].strip(), url=icon.split('url=')[1].strip())
+                    else:
+                        em.set_author(name=text.strip()[5:], icon_url=icon)
+                else:
+                    if 'url=' in author:
                         em.set_author(name=author.split('url=')[0].strip()[5:], url=author.split('url=')[1].strip())
                     else:
                         em.set_author(name=author)
-
             if image:
                 em.set_image(url=image)
             if thumbnail:
@@ -409,17 +419,17 @@ class Misc:
         is_stream = False
         if ctx.invoked_with == "game":
             message = "Playing"
-            self.bot.status_type = 0
+            self.bot.status_type = discord.ActivityType.playing
         elif ctx.invoked_with == "stream":
             is_stream = True
-            self.bot.status_type = 1
+            self.bot.status_type = discord.ActivityType.streaming
             self.bot.is_stream = True
         elif ctx.invoked_with == "watching":
             message = "Watching"
-            self.bot.status_type = 3
+            self.bot.status_type = discord.ActivityType.watching
         elif ctx.invoked_with == "listening":
             message = "Listening to"
-            self.bot.status_type = 2
+            self.bot.status_type = discord.ActivityType.listening
         if game:
             # Cycle games if more than one game is given.
             if ' | ' in game:
@@ -480,17 +490,17 @@ class Misc:
                 if is_stream and '=' in game:
                     g, url = game.split('=')
                     await ctx.send(self.bot.bot_prefix + 'Stream set as: ``Streaming %s``' % g)
-                    await self.bot.change_presence(game=discord.Game(name=g, type=1, url=url))
+                    await self.bot.change_presence(activity=discord.Streaming(name=g, url=url))
                 else:
                     await ctx.send(self.bot.bot_prefix + 'Game set as: ``{} {}``'.format(message, game))
-                    await self.bot.change_presence(game=discord.Game(name=game, type=self.bot.status_type))
+                    await self.bot.change_presence(activity=discord.Activity(name=game, type=self.bot.status_type))
 
         # Remove game status.
         else:
             self.bot.game_interval = None
             self.bot.game = None
             self.bot.is_stream = False
-            await self.bot.change_presence(game=None)
+            await self.bot.change_presence(activity=None)
             await ctx.send(self.bot.bot_prefix + 'Set playing status off')
             if os.path.isfile('settings/games.json'):
                 os.remove('settings/games.json')
