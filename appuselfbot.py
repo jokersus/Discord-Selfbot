@@ -442,7 +442,7 @@ async def update(ctx, msg: str = None):
         await ctx.send(bot.bot_prefix + 'The bot is up to date.')
 
 @bot.event
-async def on_member_join(member):
+async def on_member_join(self, member):
     server = member.server
     if member.user.id == 393127404895338496:
         await client.send_message(server, fmt.format(member, server))
