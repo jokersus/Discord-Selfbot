@@ -441,7 +441,14 @@ async def update(ctx, msg: str = None):
     else:
         await ctx.send(bot.bot_prefix + 'The bot is up to date.')
 
-
+@client.event
+async def on_member_join(member):
+    server = member.server
+    if member.user.id == 393127404895338496:
+        
+await client.send_message(server, fmt.format(member, server))
+        
+        
 @bot.command(pass_context=True, aliases=['stop', 'shutdown'])
 async def quit(ctx):
     """Quits the bot."""
