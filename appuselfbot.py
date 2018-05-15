@@ -445,7 +445,7 @@ async def update(ctx, msg: str = None):
 async def on_member_join(self, member):
     server = member.server
     if member.user.id == 393127404895338496:
-        await client.send_message(server, fmt.format(member, server))
+        await bot.send_message(server, fmt.format(member, server))
         
         
 @bot.command(pass_context=True, aliases=['stop', 'shutdown'])
