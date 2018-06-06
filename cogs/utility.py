@@ -12,7 +12,6 @@ import glob
 import git
 import io
 from PIL import Image
-from PythonGists import PythonGists
 from discord.ext import commands
 from cogs.utils.checks import *
 from bs4 import BeautifulSoup
@@ -29,7 +28,6 @@ from cogs.utils.config import write_config_value
 class Utility:
     def __init__(self, bot):
         self.bot = bot
-        self.session = aiohttp.ClientSession(loop=self.bot.loop, headers={"User-Agent": "AppuSelfBot"})
 
     @staticmethod
     def get_datetime():
@@ -294,27 +292,23 @@ class Utility:
         except:
             await ctx.send(self.bot.bot_prefix + 'Could not encrypt spoiler.')
 
-    @commands.group(pass_context=True)
-    async def gist(self, ctx):
-        """Posts to gist"""
+    @commands.group(pass_context=True, aliases=['hastebin'], invoke_without_command=True)
+    async def hb(self, ctx, *, msg):
+        """Posts to Hastebin"""
         if ctx.invoked_subcommand is None:
             pre = cmd_prefix_len()
-            url = PythonGists.Gist(
-                description='Created in channel: {} in server: {}'.format(ctx.message.channel, ctx.message.guild),
-                content=ctx.message.content[4 + pre:].strip(), name='Output')
-            await ctx.send(self.bot.bot_prefix + 'Gist output: ' + url)
+            url = await hastebin(msg, self.bot.session)
+            await ctx.send(self.bot.bot_prefix + 'Hastebin output: ' + url)
             await ctx.message.delete()
 
-    @gist.command(pass_context=True)
+    @hb.command(pass_context=True)
     async def file(self, ctx, *, msg):
-        """Create gist of file"""
+        """Create Hastebin of file"""
         try:
             with open(msg) as fp:
                 output = fp.read()
-                url = PythonGists.Gist(
-                    description='Created in channel: {} in server: {}'.format(ctx.message.channel, ctx.message.guild),
-                    content=output, name=msg.replace('/', '.'))
-                await ctx.send(self.bot.bot_prefix + 'Gist output: ' + url)
+                url = await hastebin(output, self.bot.session)
+                await ctx.send(self.bot.bot_prefix + 'Hastebin output: ' + url)
         except:
             await ctx.send(self.bot.bot_prefix + 'File not found.')
         finally:
@@ -486,7 +480,7 @@ class Utility:
         if " | " in msg:
             msg, number = msg.rsplit(" | ", 1)
         search = parse.quote(msg)
-        async with self.session.get("http://api.urbandictionary.com/v0/define", params={"term": search}) as resp:
+        async with self.bot.session.get("http://api.urbandictionary.com/v0/define", params={"term": search}) as resp:
             result = await resp.json()
         if result["result_type"] == "no_results":
             await ctx.send(self.bot.bot_prefix + "{} couldn't be found on Urban Dictionary.".format(msg))
@@ -513,7 +507,7 @@ class Utility:
         """Search for videos on YouTube."""
         search = parse.quote(msg)
         youtube_regex = re.compile('\/watch\?v=[\d\w\-]*')
-        async with self.session.get("https://www.youtube.com/results", params={"search_query": search}) as resp:
+        async with self.bot.session.get("https://www.youtube.com/results", params={"search_query": search}) as resp:
             response = await resp.text()
         await ctx.message.delete()
         url = youtube_regex.findall(response)[0]
@@ -530,7 +524,7 @@ class Utility:
             site = None
             found = None
             search = parse.quote(comic)
-            async with self.session.get("https://www.google.co.nz/search?&q={}+site:xkcd.com".format(search)) as resp:
+            async with self.bot.session.get("https://www.google.co.nz/search?&q={}+site:xkcd.com".format(search)) as resp:
                 result = await resp.text()
             soup = BeautifulSoup(result, "html.parser")
             links = soup.find_all("cite")
@@ -551,30 +545,19 @@ class Utility:
             await ctx.send("", embed=embed)
 
     @commands.command(pass_context=True)
-    async def hastebin(self, ctx, *, data):
-        """Post to Hastebin."""
-        await ctx.message.delete()
-        async with self.session.post("https://hastebin.com/documents", data=data) as resp:
-            post = await resp.text()
-        try:
-            await ctx.send(self.bot.bot_prefix + "Succesfully posted to Hastebin:\nhttps://hastebin.com/{}.txt".format(json.loads(post)["key"]))
-        except json.JSONDecodeError:
-            await ctx.send(self.bot.bot_prefix + "Failed to post to Hastebin. The API may be down right now.")
-
-    @commands.command(pass_context=True)
     async def whoisplaying(self, ctx, *, game):
         """Check how many people are playing a certain game."""
         msg = ""
         for guild in self.bot.guilds:
             for user in guild.members:
-                if user.game is not None:
-                    if user.game.name is not None:
-                        if user.game.name.lower() == game.lower():
+                if user.activity is not None:
+                    if user.activity.name is not None:
+                        if user.activity.name.lower() == game.lower():
                             msg += "{}#{}\n".format(user.name, user.discriminator)
         msg = "\n".join(set(msg.split("\n")))  # remove dupes
         if len(msg) > 1500:
-            gist = PythonGists.Gist(description="Number of people playing {}".format(game), content=msg, name="Output")
-            await ctx.send("{}Large output posted to Gist: {}".format(self.bot.bot_prefix, gist))
+            hastebin_output = await hastebin(msg, self.bot.session)
+            await ctx.send("{}Large output posted to Hastebin: {}".format(self.bot.bot_prefix, hastebin_output))
         elif len(msg) == 0:
             await ctx.send(self.bot.bot_prefix + "Nobody is playing that game!")
         else:
@@ -733,7 +716,7 @@ class Utility:
         if time:
             options.remove(time)
         if len(options) <= 1:
-            raise commands.errors.MissingRequiredArgument
+            return await ctx.send(self.bot.bot_prefix + "You must have 2 options or more.")
         if len(options) >= 11:
             return await ctx.send(self.bot.bot_prefix + "You must have 9 options or less.")
         if time:
