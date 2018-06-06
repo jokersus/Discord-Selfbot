@@ -52,6 +52,13 @@ _silent = args.silent
 _force_admin = False
 
 try:
+    import uvloop
+except ImportError:
+    pass
+else:
+    asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
+
+try:
     token = os.environ['TOKEN']
     heroku = True
 except KeyError:
@@ -122,7 +129,11 @@ else:
         with open('settings/config.json', encoding='utf-8', mode="r") as f:
             data = load(f)  # checks if the settings file is valid json file
     except IOError:
-        wizard()
+        if not heroku:
+            wizard()
+        else:
+            print("Error: Heroku environment detected, but config.json not found!\nThis is usually due to user error during Heroku setup.")
+            exit(-1)
 
 shutdown = False
 if os.name == 'nt':
@@ -208,6 +219,8 @@ async def on_ready():
         print(message.encode(errors='replace').decode())
     print(uid_message)
     print(separator)
+
+    bot.session = aiohttp.ClientSession(loop=bot.loop, headers={"User-Agent": "AppuSelfBot"})
 
     bot.uptime = datetime.datetime.now()
     bot.icount = bot.message_count = bot.mention_count = bot.keyword_log = 0
@@ -831,7 +844,7 @@ async def game_and_avatar(bot):
                         g, url = bot.game.split('=')
                         await bot.change_presence(activity=discord.Streaming(name=g, url=url), status=set_status(bot), afk=True)
                     elif bot.game and not bot.is_stream:
-                        await bot.change_presence(activity=discord.Game(name=bot.game),
+                        await bot.change_presence(activity=discord.Activity(name=bot.game, type=bot.status_type),
                                                   status=set_status(bot), afk=True)
                     else:
                         await bot.change_presence(status=set_status(bot), afk=True)
