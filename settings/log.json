@@ -1,7 +1,7 @@
 {
     "allservers": "True",
     "blacklisted_channels": {},
-    "blacklisted_servers": [398305875237928970],
+    "blacklisted_servers": ["398305875237928970"],
     "blacklisted_users": [],
     "blacklisted_words": [],
     "context_len": "4",
