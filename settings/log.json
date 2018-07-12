@@ -3,7 +3,7 @@
     "blacklisted_channels": {},
     "blacklisted_servers": ["398305875237928970"],
     "blacklisted_users": [],
-    "blacklisted_words": [],
+    "blacklisted_words": ["techpriest","judas"],
     "context_len": "4",
     "keyusers": {},
     "keyword_logging": "on",
