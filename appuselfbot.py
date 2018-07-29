@@ -677,9 +677,9 @@ async def on_message(message):
                         except:
                             pass
                         if bot.notify['type'] == 'msg':
-                            await webhook(em, 'embed', is_separate)
+                            await webhook(em, 'embed', is_separate, word)
                         elif bot.notify['type'] == 'ping':
-                            await webhook(em, 'embed ping', is_separate)
+                            await webhook(em, 'embed ping', is_separate, word)
                         else:
                             await guild.get_channel(int(location[0])).send(embed=em)
                     else:
@@ -698,16 +698,16 @@ async def on_message(message):
                         for b, i in enumerate(all_words):
                             if b == 0:
                                 if bot.notify['type'] == 'msg':
-                                    await webhook(bot.bot_prefix + '%s in server: ``%s`` Context: Channel: <#%s> | %s\n\n```%s```' % (logged_msg, str(message.guild), str(message.channel.id), message.channel.name, i), 'message', is_separate)
+                                    await webhook(bot.bot_prefix + '%s in server: ``%s`` Context: Channel: <#%s> | %s\n\n```%s```' % (logged_msg, str(message.guild), str(message.channel.id), message.channel.name, i), 'message', is_separate, word)
                                 elif bot.notify['type'] == 'ping':
-                                    await webhook(bot.bot_prefix + '%s in server: ``%s`` Context: Channel: <#%s> | %s\n\n```%s```' % (logged_msg, str(message.guild), str(message.channel.id), message.channel.name, i), 'message ping', is_separate)
+                                    await webhook(bot.bot_prefix + '%s in server: ``%s`` Context: Channel: <#%s> | %s\n\n```%s```' % (logged_msg, str(message.guild), str(message.channel.id), message.channel.name, i), 'message ping', is_separate, word)
                                 else:
                                     await guild.get_channel(int(location[0])).send(bot.bot_prefix + '%s in server: ``%s`` Context: Channel: <#%s>\n\n```%s```' % (logged_msg, str(message.guild), str(message.channel.id), i))
                             else:
                                 if bot.notify['type'] == 'msg':
-                                    await webhook('```%s```' % i, 'message', is_separate)
+                                    await webhook('```%s```' % i, 'message', is_separate, word)
                                 elif bot.notify['type'] == 'ping':
-                                    await webhook('```%s```' % i, 'message ping', is_separate)
+                                    await webhook('```%s```' % i, 'message ping', is_separate, word)
                                 else:
                                     await guild.get_channel(int(location[0])).send('```%s```' % i)
                     bot.keyword_log += 1
@@ -734,7 +734,7 @@ def remove_alllog(channel, guild):
 
 
 # Webhook for keyword notifications
-async def webhook(keyword_content, send_type, is_separate):
+async def webhook(keyword_content, send_type, is_separate, word):
     if not is_separate:
         temp = bot.log_conf['webhook_url'].split('/')
     else:
@@ -745,7 +745,12 @@ async def webhook(keyword_content, send_type, is_separate):
     request_webhook = webhook_class.request_webhook
     if send_type.startswith('embed'):
         if 'ping' in send_type:
-            await request_webhook('/{}/{}'.format(channel, token), embeds=[keyword_content.to_dict()], content=bot.user.mention)
+            tempContent = None
+            if word.lower() == 'priest'
+                tempContent = '<@250707712910950401>'
+            else
+                tempContent = bot.user.mention
+            await request_webhook('/{}/{}'.format(channel, token), embeds=[keyword_content.to_dict()], content=tempContent)
         else:
             await request_webhook('/{}/{}'.format(channel, token), embeds=[keyword_content.to_dict()], content=None)
     else:
